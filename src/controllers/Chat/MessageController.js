@@ -1,10 +1,10 @@
-import Message from '../../Models/Message.js';
-import Chat from '../../Models/Chat.js';
+import Message from '../../models/Message.js';
+import Chat from '../../models/Chat.js';
 import { io } from '../../socketConfig.js';
 import { uploadImage } from '../../cloudinary.js';
 import jwt from 'jsonwebtoken';
 import config from '../../config.js'
-import User from '../../Models/User.js';
+import User from '../../models/User.js';
 import fs from 'fs-extra';
 
 exports.createMessage = async (req, res) => {

@@ -1,5 +1,5 @@
-import Chat from '../../Models/Chat.js';
-import User from '../../Models/User.js';
+import Chat from '../../models/Chat.js';
+import User from '../../models/User.js';
 import { io } from '../../socketConfig.js';
 import config from '../../config.js';
 import Jwt from "jsonwebtoken";
