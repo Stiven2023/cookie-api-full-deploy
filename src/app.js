@@ -12,9 +12,6 @@ import userRoutes from './routes/user/user.routes.js';
 import profileRoutes from './routes/user/profile.routes.js';
 import chatRoutes from './routes/chat/ChatRoutes.js';
 import messageRoutes from './routes/chat/MessageRoutes.js';
-import postRoutes from './routes/post/PostRoutes.js';
-import commentRoutes from './routes/post/CommentsRoutes.js';
-import likeRoutes from './routes/post/LikesRoutes.js';
 
 // SERVER INITIALIZATION
 const app = express();
@@ -45,8 +42,5 @@ app.use('/api/users', userRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/chat/messages', messageRoutes);
-app.use('/api/post', postRoutes);
-app.use('/api/post/comment', commentRoutes);
-app.use('/api/post/like', likeRoutes);
 
 export default app;
