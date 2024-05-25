@@ -1,0 +1,47 @@
+Base_url : 
+
+SI SE REQUIERE EL TOKEN (x-access-token) ES PORQUE SE REQUIERE LA VERIFICACION DE USUARIO LOGEADO.
+
+CHAT
+ 1. Create Chat: Base_url/api/chat/ | Method: POST
+  headers : 
+  {
+    "x-access-token": "token"
+  }
+  json body : 
+  {
+    "name": "chatName" (solo si es un grupo),
+    "users": ["userId1", "userId2", "userId3"] " (mas de 2 usuarios para un grupo)"
+  }
+
+ 2. Get All Chats: Base_url/api/chat/ | Method: GET
+  headers : 
+  {
+    "x-access-token": "token"
+  }
+
+ 3. Join Chat: Base_url/api/chat/chatId | Method: POST
+  headers : 
+  {
+    "x-access-token": "token"
+  }
+
+ 4. Get Chat By Id: Base_url/api/chat/chatId | Method: GET
+  headers : 
+  {
+    "x-access-token": "token"
+  }
+
+ 5. Update Chat: Base_url/api/chat/chatId | Method: PUT (solo si es un grupo)
+  headers : {
+    "x-access-token": "token"
+  }
+  json body : 
+  {
+    "name": "chatName"
+  }
+
+ 6. Delete Chat: Base_url/api/chat/chatId | Method: DELETE
+  headers : {
+    "x-access-token": "token"
+  }
