@@ -76,13 +76,13 @@ exports.signin = async (req, res) => {
             return res.status(403).json({ message: "User is inactive. Please contact the administrator." });
         }
 
-        if (userFound.sesion === 'true') {
-            return res.status(403).json({ message: "User is already logged in." });
-        }7
+        // if (userFound.sesion === 'true') {
+        //     return res.status(403).json({ message: "User is already logged in." });
+        // }
 
         const token = jwt.sign({ id: userFound._id, role: userFound.role.name, username: userFound.username, fullname: userFound.fullname, image: userFound.image }, config.secret);
 
-        userFound.sesion = true;
+        // userFound.sesion = true;
         await userFound.save();
 
         console.log(userFound);
