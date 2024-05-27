@@ -10,7 +10,7 @@ exports.getProfile = async (req, res) => {
         const token = req.headers['x-access-token'];
         const decoded = jwt.verify(token, config.secret);
         const user = await User.findById(decoded.id).select('-password');
-        res.json(user);
+        res.status(200).json(user);
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
