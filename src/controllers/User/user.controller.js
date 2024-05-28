@@ -146,16 +146,33 @@ exports.updateUser = async (req, res) => {
     }
 };
 
-exports.updateStatus = async (req, res) => { 
+exports.updateStatus = async (req, res) => {
     try {
         const { userId } = req.params;
         const { status } = req.body;
 
-        await User.findByIdAndUpdate(userId, { status });
-        await sendUpdateStatusEmail(email, username, status)
+        // Buscar el usuario y actualizar el estado
+        const user = await User.findByIdAndUpdate(userId, { status }, { new: true });
 
-        res.status(200).json({ message: "User status updated successfully" });
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        // Suponiendo que 'sendUpdateStatusEmail' necesita email y username
+        try {
+            await sendUpdateStatusEmail(user.email, user.username, status);
+        } catch (emailError) {
+            console.error('Error sending update status email:', emailError);
+            // Enviar respuesta con éxito a pesar de error en el envío de email
+            return res.status(200).json({ 
+                message: "User status updated successfully, but failed to send email", 
+                user 
+            });
+        }
+
+        res.status(200).json({ message: "User status updated successfully", user });
     } catch (error) {
+        console.error('Error updating user status:', error);
         res.status(500).json({ error: "Error updating user status" });
     }
 };
