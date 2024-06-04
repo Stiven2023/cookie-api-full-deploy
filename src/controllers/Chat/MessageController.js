@@ -12,12 +12,12 @@ exports.createMessage = async (req, res) => {
     const token = req.headers['x-access-token'];
     const decoded = jwt.verify(token, config.secret);
     const userId = decoded.id;
-    const { chatId } = req.params; // No necesitas usar chatId otra vez, ya lo estás extrayendo de req.params
+    const { chatId } = req.params; 
 
     const user = await User.findById(userId);
 
     if (!user) {
-      return res.status(401).json({ error: 'User not found' }); // Retorna después de enviar una respuesta
+      return res.status(401).json({ error: 'User not found' }); 
     }
 
     const sender = user._id;
@@ -47,10 +47,10 @@ exports.createMessage = async (req, res) => {
     await chat.save();
 
     io.emit('newMessage', message, chatId);
-    return res.status(201).json(message); // Retorna después de enviar una respuesta
+    return res.status(201).json(message); 
   } catch (error) {
     console.error("Error creating message:", error);
-    return res.status(500).json({ error: 'Internal Server Error' }); // Retorna después de enviar una respuesta
+    return res.status(500).json({ error: 'Internal Server Error' }); 
   }
 };
 
@@ -84,7 +84,7 @@ exports.getAllMessages = async (req, res) => {
 exports.getMessageById = async (req, res) => {
   try {
     const messageId = req.params.id;
-    const message = await MessageModel.findById(messageId);
+    const message = await Message.findById(messageId);
     if (message) {
       res.json(message);
     } else {
@@ -96,12 +96,11 @@ exports.getMessageById = async (req, res) => {
   }
 }
 
-// Actualizar un mensaje por su ID
 exports.updateMessage = async (req, res) => {
   try {
     const messageId = req.params.id;
     const { sender, content, createdAt, chatId } = req.body;
-    const updatedMessage = await MessageModel.findByIdAndUpdate(
+    const updatedMessage = await Message.findByIdAndUpdate(
       messageId,
       { sender, content, createdAt, chatId },
       { new: true }
@@ -117,14 +116,13 @@ exports.updateMessage = async (req, res) => {
   }
 }
 
-// Eliminar un mensaje por su ID
 exports.deleteMessage = async (req, res) => {
   try {
     const messageId = req.params.id;
-    const deletedMessage = await MessageModel.findByIdAndDelete(messageId);
+    const deletedMessage = await Message.findByIdAndDelete(messageId);
     if (deletedMessage) {
       // Eliminar el ID del mensaje del chat correspondiente
-      await ChatModel.findByIdAndUpdate(deletedMessage.chatId, { $pull: { messages: messageId } });
+      await Chat.findByIdAndUpdate(deletedMessage.chatId, { $pull: { messages: messageId } });
       res.json({ message: 'Message deleted successfully' });
     } else {
       res.status(404).json({ error: 'Message not found' });
