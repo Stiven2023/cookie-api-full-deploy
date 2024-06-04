@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post('/:chatId', createMessage);
 router.get('/:chatId', getAllMessages);
-router.get('/:id', getMessageById); 
+router.get('/message/:id', getMessageById); 
 router.put('/:id', updateMessage); 
 router.delete('/:id', deleteMessage); 
 
