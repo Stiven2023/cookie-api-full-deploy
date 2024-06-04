@@ -10,9 +10,9 @@ import fs from 'fs-extra';
 exports.createMessage = async (req, res) => {
   try {
     const token = req.headers['x-access-token'];
-    const decodedToken = jwt.verify(token, config.secret);
-    const userId = decodedToken.id;
-    const { chatId } = req.params;
+    const decoded = jwt.verify(token, config.secret);
+    const userId = decoded.id;
+    const { chatId } = req.params.chatId;
 
     const user = await User.findById(userId);
 
