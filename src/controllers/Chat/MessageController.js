@@ -12,13 +12,12 @@ exports.createMessage = async (req, res) => {
     const token = req.headers['x-access-token'];
     const decoded = jwt.verify(token, config.secret);
     const userId = decoded.id;
-    const { chatId } = req.params.chatId;
+    const { chatId } = req.params; // No necesitas usar chatId otra vez, ya lo estás extrayendo de req.params
 
     const user = await User.findById(userId);
 
     if (!user) {
-      res.status(401).json({ error: 'User not found' });
-      return;
+      return res.status(401).json({ error: 'User not found' }); // Retorna después de enviar una respuesta
     }
 
     const sender = user._id;
@@ -48,10 +47,10 @@ exports.createMessage = async (req, res) => {
     await chat.save();
 
     io.emit('newMessage', message, chatId);
-    res.status(201).json(message);
+    return res.status(201).json(message); // Retorna después de enviar una respuesta
   } catch (error) {
     console.error("Error creating message:", error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: 'Internal Server Error' }); // Retorna después de enviar una respuesta
   }
 };
 
