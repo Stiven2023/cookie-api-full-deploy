@@ -91,7 +91,7 @@ exports.joinChat = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    const chat = await ChatModel.findById(chatId).populate('messages');
+    const chat = await Chat.findById(chatId).populate('messages');
     if (!chat) {
       return res.status(404).json({ error: 'Chat not found' });
     }
