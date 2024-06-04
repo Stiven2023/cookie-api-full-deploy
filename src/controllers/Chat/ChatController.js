@@ -113,11 +113,11 @@ exports.joinChat = async (req, res) => {
 exports.getChatById = async (req, res) => {
   try {
     const chatId = req.params.id;
-    const chat = await ChatModel.findById(chatId);
+    const chat = await Chat.findById(chatId);
     if (!chat) {
       return res.status(404).json({ error: 'Chat not found' });
     }
-    const chatWithMessages = await ChatModel.findById(chatId).populate('messages');
+    const chatWithMessages = await Chat.findById(chatId).populate('messages');
     res.json(chatWithMessages);
   } catch (error) {
     console.error("Error getting chat by ID:", error);
