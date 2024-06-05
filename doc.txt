@@ -45,3 +45,37 @@ CHAT
   headers : {
     "x-access-token": "token"
   }
+
+MESSAGE
+ 1. Create Message: Base_url/api/chat/messages/chatId/messages | Method: POST
+  headers : {
+    "x-access-token": "token"
+  }
+  json body : 
+  {
+    "content": "message content"
+  }
+
+ 2. Get All Messages: Base_url/api/chat/messages/chatId/messages | Method: GET
+  headers : {
+    "x-access-token": "token"
+  }
+
+ 3. Get Message By Id: Base_url/api/chat/messages/chatId/messages/messageId | Method: GET
+  headers : {
+    "x-access-token": "token"
+  }
+
+ 4. Update Message: Base_url/api/chat/messages/chatId/messages/messageId | Method: PUT
+  headers : {
+    "x-access-token": "token"
+  }
+  json body : 
+  {
+    "content": "message content"
+  }
+
+ 5. Delete Message: Base_url/api/chat/messages/chatId/messages/messageId | Method: DELETE
+  headers : {
+    "x-access-token": "token"
+  }
