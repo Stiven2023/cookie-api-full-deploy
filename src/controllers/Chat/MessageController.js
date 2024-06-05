@@ -82,7 +82,7 @@ exports.getAllMessages = async (req, res) => {
 
 exports.getMessageById = async (req, res) => {
   try {
-    const { messageId } = req.params.id;
+    const { messageId } = req.params;
     const message = await Message.findById(messageId);
     if (message) {
       res.json(message);

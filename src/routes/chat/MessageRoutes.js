@@ -5,8 +5,8 @@ const router = express.Router();
 
 router.post('/:chatId/messages', createMessage);
 router.get('/:chatId/messages', getAllMessages);
-router.get('/:chatId/messages/:id', getMessageById);
-router.put('/:chatId/messages/:id', updateMessage);
+router.get('/:chatId/messages/:messageId', getMessageById);
+router.put('/:chatId/messages/:messageId', updateMessage);
 router.delete('/:chatId/messages/:messageId', deleteMessage);
 
 export default router 
