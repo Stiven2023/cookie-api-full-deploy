@@ -3,10 +3,10 @@ import { createMessage, getAllMessages, getMessageById, updateMessage, deleteMes
 
 const router = express.Router();
 
-router.post('/:chatId', createMessage);
-router.get('/:chatId', getAllMessages);
-router.get('/message/:id', getMessageById); 
-router.put('/:id', updateMessage); 
-router.delete('/:id', deleteMessage); 
+router.post('/:chatId/messages', createMessage);
+router.get('/:chatId/messages', getAllMessages);
+router.get('/:chatId/messages/:id', getMessageById);
+router.put('/:chatId/messages/:id', updateMessage);
+router.delete('/:chatId/messages/:messageId', deleteMessage);
 
 export default router 

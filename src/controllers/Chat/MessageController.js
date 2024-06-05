@@ -12,12 +12,12 @@ exports.createMessage = async (req, res) => {
     const token = req.headers['x-access-token'];
     const decoded = jwt.verify(token, config.secret);
     const userId = decoded.id;
-    const { chatId } = req.params; 
+    const { chatId } = req.params;
 
     const user = await User.findById(userId);
 
     if (!user) {
-      return res.status(401).json({ error: 'User not found' }); 
+      return res.status(401).json({ error: 'User not found' });
     }
 
     const sender = user._id;
@@ -47,12 +47,12 @@ exports.createMessage = async (req, res) => {
     await chat.save();
 
     io.emit('newMessage', message, chatId);
-    return res.status(201).json(message); 
+    return res.status(201).json(message);
   } catch (error) {
     console.error("Error creating message:", error);
-    return res.status(500).json({ error: 'Internal Server Error' }); 
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
-};
+}
 
 exports.getAllMessages = async (req, res) => {
   try {
@@ -80,10 +80,9 @@ exports.getAllMessages = async (req, res) => {
   }
 }
 
-
 exports.getMessageById = async (req, res) => {
   try {
-    const messageId = req.params.id;
+    const { messageId } = req.params.id;
     const message = await Message.findById(messageId);
     if (message) {
       res.json(message);
@@ -98,18 +97,26 @@ exports.getMessageById = async (req, res) => {
 
 exports.updateMessage = async (req, res) => {
   try {
-    const messageId = req.params.id;
-    const { sender, content, createdAt, chatId } = req.body;
-    const updatedMessage = await Message.findByIdAndUpdate(
-      messageId,
-      { sender, content, createdAt, chatId },
-      { new: true }
-    );
-    if (updatedMessage) {
-      res.json(updatedMessage);
-    } else {
-      res.status(404).json({ error: 'Message not found' });
+    const token = req.headers['x-access-token'];
+    const decoded = jwt.verify(token, config.secret);
+    const userId = decoded.id;
+    const { messageId } = req.params;
+    const { content } = req.body;
+
+    const message = await Message.findById(messageId);
+
+    if (!message) {
+      return res.status(404).json({ error: 'Message not found' });
     }
+
+    if (message.sender.toString() !== userId) {
+      return res.status(403).json({ error: 'User not authorized to edit this message' });
+    }
+
+    message.content = content || message.content;
+    await message.save();
+
+    res.json(message);
   } catch (error) {
     console.error("Error updating message:", error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -118,15 +125,33 @@ exports.updateMessage = async (req, res) => {
 
 exports.deleteMessage = async (req, res) => {
   try {
-    const messageId = req.params.id;
-    const deletedMessage = await Message.findByIdAndDelete(messageId);
-    if (deletedMessage) {
-      // Eliminar el ID del mensaje del chat correspondiente
-      await Chat.findByIdAndUpdate(deletedMessage.chatId, { $pull: { messages: messageId } });
-      res.json({ message: 'Message deleted successfully' });
-    } else {
-      res.status(404).json({ error: 'Message not found' });
+    const token = req.headers['x-access-token'];
+    const decoded = jwt.verify(token, config.secret);
+    const userId = decoded.id;
+    const { messageId, chatId } = req.params;
+
+    const chat = await Chat.findById(chatId);
+    if (!chat) {
+      return res.status(404).json({ error: 'Chat not found' });
     }
+
+    const message = await Message.findById(messageId);
+    if (!message) {
+      return res.status(404).json({ error: 'Message not found' });
+    }
+
+    if (message.sender.toString() !== userId) {
+      return res.status(403).json({ error: 'User not authorized to delete this message' });
+    }
+
+    if (!chat.messages.includes(messageId)) {
+      return res.status(404).json({ error: 'Message does not belong to this chat' });
+    }
+
+    await Message.findByIdAndDelete(messageId);
+    await Chat.findByIdAndUpdate(chatId, { $pull: { messages: messageId } });
+
+    res.json({ message: 'Message deleted successfully' });
   } catch (error) {
     console.error("Error deleting message:", error);
     res.status(500).json({ error: 'Internal Server Error' });
