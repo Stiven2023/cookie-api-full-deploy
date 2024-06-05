@@ -62,7 +62,7 @@ exports.createChat = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error', errorMessage: error.message });
   }
-};
+}
 
 exports.getAllChats = async (req, res) => {
   try {
@@ -175,7 +175,7 @@ exports.deleteChat = async (req, res) => {
       return res.status(403).json({ error: 'You are not authorized to delete this chat' });
     }
 
-    await chat.remove();
+    await Chat.findByIdAndDelete(chatId);
 
     io.emit('chatDeleted', chatId);
 
