@@ -82,13 +82,19 @@ exports.getAllMessages = async (req, res) => {
 
 exports.getMessageById = async (req, res) => {
   try {
-    const { messageId } = req.params;
-    const message = await Message.findById(messageId);
-    if (message) {
-      res.json(message);
-    } else {
-      res.status(404).json({ error: 'Message not found' });
+    const { chatId, messageId } = req.params;
+
+    const chat = await Chat.findById(chatId);
+    if (!chat) {
+      return res.status(404).json({ error: 'Chat not found' });
     }
+
+    const message = await Message.findById(messageId);
+    if (!message) {
+      return res.status(404).json({ error: 'Message not found' });
+    }
+
+    res.json(message);
   } catch (error) {
     console.error("Error getting message by ID:", error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -100,7 +106,7 @@ exports.updateMessage = async (req, res) => {
     const token = req.headers['x-access-token'];
     const decoded = jwt.verify(token, config.secret);
     const userId = decoded.id;
-    const { messageId } = req.params;
+    const { chatId, messageId } = req.params;
     const { content } = req.body;
 
     const message = await Message.findById(messageId);
@@ -122,6 +128,7 @@ exports.updateMessage = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
+
 
 exports.deleteMessage = async (req, res) => {
   try {
